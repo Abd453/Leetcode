@@ -1,10 +1,15 @@
 class Solution:
     def isCovered(self, ranges: List[List[int]], left: int, right: int) -> bool:
-        ranges.sort()
+        diff = [0] * 52
+        
         for start, end in ranges:
-            if end < left: continue # skip all intervals < left
-            if start > left: return False # don't cover diapason [left:start-1]
-            if end >= right: return True # diapason from left to right is covered fully
-            left = end + 1
-
-        return False
+            diff[start] += 1
+            diff[end + 1] -= 1
+        
+        covered = 0
+        for i in range(1, 51):
+            covered += diff[i]
+            if left <= i <= right and covered <= 0:
+                return False
+        
+        return True
